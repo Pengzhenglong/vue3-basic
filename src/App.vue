@@ -4,8 +4,15 @@
   <h1>{{ double }}</h1>
   <h1>x:{{ x }}</h1>
   <h1>y: {{ y }}</h1>
+  <h1 v-if="loading">Loading!...</h1>
+  <div>
+      <img v-if="loaded" :src="result.message" alt="" />
+  </div>
+
+  
   <button @click="increase">+1</button>
   <h1>{{ greetings }}</h1>
+
   <button @click="updateGreeting">Update Title</button>
 
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
@@ -14,6 +21,8 @@
 <script lang="ts">
 import { ref, computed, reactive, toRefs, watch } from "vue";
 import useMousePosition from "./hook/useMousePosition";
+import useURLLoader from "./hook/useURLLoader";
+
 // import HelloWorld from './components/HelloWorld.vue';
 interface DataProps {
   count: number;
@@ -48,7 +57,9 @@ export default {
       console.log("old    " + oldValue);
       document.title = "updated" + greetings.value + data.count;
     });
-
+    const { loaded, loading, result } = useURLLoader(
+      "https://dog.ceo/api/breeds/image/random"
+    );
     const refData = toRefs(data);
     return {
       ...refData,
@@ -56,6 +67,9 @@ export default {
       updateGreeting,
       x,
       y,
+      loaded,
+      loading,
+      result,
     };
   },
 };
