@@ -3,11 +3,13 @@
   <h1>{{ count }}</h1>
   <h1>{{ double }}</h1>
   <button @click="increase">+1</button>
+  <h1>{{ greetings }}</h1>
+  <button @click="updateGreeting">Update Title</button>
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
 </template>
 
 <script lang="ts">
-import { ref, computed, reactive, toRefs } from "vue";
+import { ref, computed, reactive, toRefs, watch } from "vue";
 // import HelloWorld from './components/HelloWorld.vue';
 interface DataProps {
   count: number;
@@ -32,9 +34,21 @@ export default {
       },
       double: computed(() => data.count * 2),
     });
+    const greetings = ref("");
+    const updateGreeting = () => {
+      greetings.value += "Hello!";
+    };
+    watch([greetings, () => data.count], (newVaule, oldValue) => {
+      console.log("new    " + newVaule);
+      console.log("old    " + oldValue);
+      document.title = "updated" + greetings.value + data.count;
+    });
+
     const refData = toRefs(data);
     return {
       ...refData,
+      greetings,
+      updateGreeting,
     };
   },
 };
