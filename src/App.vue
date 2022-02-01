@@ -2,14 +2,18 @@
   <img alt="Vue logo" src="./assets/logo.png" />
   <h1>{{ count }}</h1>
   <h1>{{ double }}</h1>
+  <h1>x:{{ x }}</h1>
+  <h1>y: {{ y }}</h1>
   <button @click="increase">+1</button>
   <h1>{{ greetings }}</h1>
   <button @click="updateGreeting">Update Title</button>
+
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
 </template>
 
 <script lang="ts">
 import { ref, computed, reactive, toRefs, watch } from "vue";
+import useMousePosition from "./hook/useMousePosition";
 // import HelloWorld from './components/HelloWorld.vue';
 interface DataProps {
   count: number;
@@ -34,11 +38,12 @@ export default {
       },
       double: computed(() => data.count * 2),
     });
+    const { x, y } = useMousePosition();
     const greetings = ref("");
     const updateGreeting = () => {
       greetings.value += "Hello!";
     };
-    watch([greetings, () => data.count], (newVaule, oldValue) => {
+    watch([greetings, data], (newVaule, oldValue) => {
       console.log("new    " + newVaule);
       console.log("old    " + oldValue);
       document.title = "updated" + greetings.value + data.count;
@@ -49,6 +54,8 @@ export default {
       ...refData,
       greetings,
       updateGreeting,
+      x,
+      y,
     };
   },
 };
