@@ -8,7 +8,7 @@
   <div>
     <img v-if="loaded" :src="result[0].url" alt="" />
   </div>
-
+  <Modal></Modal>
   <button @click="increase">+1</button>
   <h1>{{ greetings }}</h1>
 
@@ -21,6 +21,7 @@
 import { ref, computed, reactive, toRefs, watch } from "vue";
 import useMousePosition from "./hook/useMousePosition";
 import useURLLoader from "./hook/useURLLoader";
+import Modal from "./components/Modal.vue";
 
 // import HelloWorld from './components/HelloWorld.vue';
 interface DataProps {
@@ -48,7 +49,6 @@ export default {
     // const increase = () => {
     //   count.value++;
     // };
-
     const data: DataProps = reactive({
       count: 0,
       increase: () => {
@@ -61,7 +61,6 @@ export default {
     const updateGreeting = () => {
       greetings.value += "Hello!";
     };
-
     watch([greetings, data], (newVaule, oldValue) => {
       console.log("new    " + newVaule);
       console.log("old    " + oldValue);
@@ -70,7 +69,6 @@ export default {
     const { loaded, loading, result } = useURLLoader<CatResult[]>(
       "https://api.thecatapi.com/v1/images/search?limit=1"
     );
-
     watch(result, () => {
       if (result.value) {
         console.log("value  " + result.value[0].url);
@@ -88,6 +86,7 @@ export default {
       result,
     };
   },
+  components: { Modal },
 };
 </script>
 
