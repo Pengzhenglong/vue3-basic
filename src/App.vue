@@ -1,15 +1,28 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
+  <p>{{error}} </p>
   <h1>{{ count }}</h1>
   <h1>{{ double }}</h1>
   <h1>x:{{ x }}</h1>
   <h1>y: {{ y }}</h1>
   <h1 v-if="loading">Loading!...</h1>
   <div>
-    <img v-if="loaded" :src="result[0].url" alt="" />
+    <!-- <img v-if="loaded" :src="result[0].url" alt="" /> -->
   </div>
   <button @click="openModal">close MyModal !!!</button><br />
   <Modal :isOpen="modalIsOpen" @close-modal="onModalClose"> My Modal!!!!</Modal>
+  <!-- <AsyncShow></AsyncShow> -->
+  <Suspense>
+    <template #default>
+      <div>
+        <async-show />
+        <dog-show />
+      </div>
+    </template>
+    <template #fallback>
+      <h1>Loading !...</h1>
+    </template>
+  </Suspense>
   <button @click="increase">+1</button>
   <h1>{{ greetings }}</h1>
 
@@ -19,10 +32,12 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, reactive, toRefs, watch } from "vue";
+import { ref, computed, reactive, toRefs, watch, onErrorCaptured } from "vue";
 import useMousePosition from "./hook/useMousePosition";
 import useURLLoader from "./hook/useURLLoader";
 import Modal from "./components/Modal.vue";
+import AsyncShow from "./components/AsyncShow.vue";
+import DogShow from "./components/DogShow.vue";
 
 // import HelloWorld from './components/HelloWorld.vue';
 interface DataProps {
@@ -43,6 +58,11 @@ interface CatResult {
 export default {
   name: "App",
   setup() {
+    const error = ref(null);
+    onErrorCaptured((e: null) => {
+      error.value = e;
+      return true;
+    });
     // const count = ref(0);
     // const double = computed(() => {
     //   return count.value * 2;
@@ -96,9 +116,10 @@ export default {
       modalIsOpen,
       openModal,
       onModalClose,
+      error,
     };
   },
-  components: { Modal },
+  components: { Modal, AsyncShow, DogShow },
 };
 </script>
 
