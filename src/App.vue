@@ -8,7 +8,8 @@
   <div>
     <img v-if="loaded" :src="result[0].url" alt="" />
   </div>
-  <Modal></Modal>
+  <button @click="openModal">close MyModal !!!</button><br />
+  <Modal :isOpen="modalIsOpen" @close-modal="onModalClose"> My Modal!!!!</Modal>
   <button @click="increase">+1</button>
   <h1>{{ greetings }}</h1>
 
@@ -29,10 +30,10 @@ interface DataProps {
   double: number;
   increase: () => void;
 }
-interface DogResult {
-  message: string;
-  status: string;
-}
+// interface DogResult {
+//   message: string;
+//   status: string;
+// }
 interface CatResult {
   id: string;
   url: string;
@@ -75,6 +76,14 @@ export default {
       }
     });
     const refData = toRefs(data);
+
+    const modalIsOpen = ref(false);
+    const openModal = () => {
+      modalIsOpen.value = true;
+    };
+    const onModalClose = () => {
+      modalIsOpen.value = false;
+    };
     return {
       ...refData,
       greetings,
@@ -84,6 +93,9 @@ export default {
       loaded,
       loading,
       result,
+      modalIsOpen,
+      openModal,
+      onModalClose,
     };
   },
   components: { Modal },
